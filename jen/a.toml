@@ -1,0 +1,24 @@
+in = """
+N
+S
+{C}"""
+
+[N]
+type = 'int'
+min = 2
+max = 20
+
+[S]
+type = 'str'
+allowed = ['0','1']
+min = 'N'
+max = 'N'
+
+[C]
+type = 'int'
+min = 1
+max = 1000000000
+
+[1]
+delimiter = ' '
+count = 'N' 
