@@ -1,0 +1,19 @@
+[build-system]
+requires = ["flit_core >= 3.4,<4"]
+build-backend = "flit_core.buildapi"
+
+[project]
+name = "cp-jen"
+version = "2024.0.0"
+description = "Configurable test case generator for competitive programming."
+readme = "README.md"
+license = {file = "LICENSE"}
+keywords = ["jen", "cp-jen", "Competitive Programming","Test Generator", "Codeforces", "Atcoder"]
+requires-python = ">= 3.11"
+
+[tool.flit.module]
+name = "jen"
+
+[project.scripts]
+jen = "jen.main_cli:run"
+

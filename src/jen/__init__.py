@@ -40,7 +40,6 @@ group:
     - delimiter: " "
 """
 
-import argparse
 import tomllib
 import random
 import subprocess
@@ -91,7 +90,7 @@ class InputGroup():
         while ind < self.end_ind:
             char = StressTester.config['in'][ind]
             if char.isalpha(): self.add_variable(char);
-            elif char == '{': print("Group ind: ", ind); ind = self.add_group(ind); print("Group ind 2: ", ind)
+            elif char == '{': ind = self.add_group(ind);
             elif char == '}': self.end_ind = ind; return; # Group is done
             else: self.out_list.append(char)
             ind = ind + 1
@@ -146,6 +145,7 @@ class InputGroup():
                 else: render_list.append(out_item.render())
         return delimiter.join(render_list)
 
+import time
 class StressTester(InputGroup):
     config = {}
     var_dict = {}
@@ -153,20 +153,21 @@ class StressTester(InputGroup):
         with open(config_file, 'rb') as f:
             StressTester.config = tomllib.load(f)
             if ('in' not in self.config): raise Exception("in variable missing from configuration.")
+        StressTester.config['delimiter'] = '' # No delimiter for the main group
         super().__init__(props = StressTester.config)
 
-    def run(test_fn, ref_fn):
-
-        tst_cnt = 1
+    def run(self, test_fn, ref_fn):
+        test_cnt = 1
         while True:
-            tst_str = self.render()
-            print("test string: ", tst_str)
-            test_ps = subprocess.run(test_fn, input=tst_str, capture_output=True, shell=True, text=True)
-            ref_ps = subprocess.run(ref_fn, input=tst_str, capture_output=True, shell=True, text=True)
-            print(tst_cnt, end='\r')
-            cnt = cnt + 1
-            if (ref_ps.stdout != test_ps.stdout): break
+            test_str = self.render()
+            test_ps = subprocess.run(test_fn, input=test_str, stdout=subprocess.PIPE, shell=True, text=True)
+            ref_ps = subprocess.run(ref_fn, input=test_str, stdout=subprocess.PIPE, shell=True, text=True)
+            print(test_cnt, end = '\r')
+            test_cnt = test_cnt + 1
+            if (ref_ps.stdout != test_ps.stdout): 
+                print(f"Found difference: test #{test_cnt}")
+                break
 
-        out_fn = 'tst_' + str(tst_cnt)
+        out_fn = 'test_' + str(test_cnt)
         with open(out_fn, 'w') as f:
-            f.write(gen_ps.stdout)
+            f.write(test_str)

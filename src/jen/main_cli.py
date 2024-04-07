@@ -1,9 +1,7 @@
-#!/usr/bin/env python3
+from jen import StressTester
 import argparse
 
-from jen import StressTester
-
-if __name__ == "__main__":
+def run():
     parser = argparse.ArgumentParser(
             prog="Jen",
             description="Generates test cases given a configuration file."
@@ -17,7 +15,3 @@ if __name__ == "__main__":
     tst = StressTester(args.config_file)
 
     tst.run(args.test_program, args.ref_program)
-
-
-
-
