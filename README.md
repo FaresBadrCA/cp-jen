@@ -10,7 +10,7 @@ Python version >=3.11 is required to install the python library. Install with:
 `pip install cp-jen`
 
 This will create a `jen` script in your python `bin` folder.
-To call this script from anyware, ensure the python `bin` folder is in your PATH.
+To call this script from anywhere, ensure the python `bin` folder is in your PATH.
 
 # 💼 Usage
 
